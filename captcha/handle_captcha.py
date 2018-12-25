@@ -1,4 +1,5 @@
 import time
+import pandas as pd
 from selenium import webdriver
 from PIL import Image
 from captcha.chaojiying import Chaojiying_Client
@@ -11,6 +12,7 @@ class Handler():
         self.driver.get(url=url)
 
     def save_captcha(self):
+        # 截取验证码图片并保存到本地
         self.driver.save_screenshot('captcha.png')
         img = self.driver.find_element_by_xpath("//*[@id='wrap']/div/form/p/img")
 
@@ -23,16 +25,19 @@ class Handler():
         im = im.crop((left, top, right, bottom))
         im.save('captcha.png')
 
-    def input(self, value):
-        elem = self.driver.find_element_by_id('captcha')
-        elem.send_keys(value)
-        self.driver.find_element_by_tag_name('button').click()
-
     def get_code(self):
-        chaojiying = Chaojiying_Client('alex877428', 'chaojiying', '96001')
+        id1 = pd.read_csv('D:/Documents/token/id1.txt', header=None)[0][0]
+        id2 = pd.read_csv('D:/Documents/token/id2.txt', header=None)[0][0]
+        chaojiying = Chaojiying_Client(f'{id1}', 'chaojiying', f'{id2}')
         im = open('captcha.png', 'rb').read()
         result = chaojiying.PostPic(im, 1902)
         return result['pic_str']
+
+    def input(self, value):
+        # 将api返回的验证码输入
+        elem = self.driver.find_element_by_id('captcha')
+        elem.send_keys(value)
+        self.driver.find_element_by_tag_name('button').click()
 
     def execute(self):
         self.save_captcha()

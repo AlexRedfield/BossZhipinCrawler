@@ -24,7 +24,6 @@ class Chaojiying_Client():
             'User-Agent': 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)',
         }
 
-
     def PostPic(self, im, codetype):
         """
         im: 图片字节
@@ -39,7 +38,6 @@ class Chaojiying_Client():
                           headers=self.headers)
         return r.json()
 
-
     def ReportError(self, im_id):
         """
         im_id:报错题目的图片ID
@@ -53,10 +51,9 @@ class Chaojiying_Client():
 
 
 if __name__ == '__main__':
-    id1=auth_token = pd.read_csv('D:/Documents/token/id1.txt', header=None)[0][0]
-    id2 = auth_token = pd.read_csv('D:/Documents/token/id2.txt', header=None)[0][0]
+    id1 = pd.read_csv('D:/Documents/token/id1.txt', header=None)[0][0]
+    id2 = pd.read_csv('D:/Documents/token/id2.txt', header=None)[0][0]
     chaojiying = Chaojiying_Client(f'{id1}', 'chaojiying', f'{id2}')
     im = open('captcha.jpg', 'rb').read()
-    result=chaojiying.PostPic(im, 1902)
+    result = chaojiying.PostPic(im, 1902)
     print(result['pic_str'])
-
